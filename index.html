@@ -2,8 +2,6 @@
 <html>
 <body>
 
-<h1>Camera Web App</h1>
-
 <button id="capture">Capture Photo</button>
 <video id="video" width="640" height="480" autoplay style="position: absolute; top: -9999px;"></video>
 <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
@@ -17,7 +15,13 @@ var isVideoReady = false;
 // Get access to the camera!
 if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     // Not adding `{ audio: true }` since we only want video now
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+    navigator.mediaDevices.getUserMedia({ 
+        video: { 
+            facingMode: "environment",
+            width: { ideal: 6048 },
+            height: { ideal: 8064 }
+        } 
+    }).then(function(stream) {
         video.srcObject = stream;
         video.play();
     });
@@ -34,7 +38,9 @@ var context = canvas.getContext('2d');
 // Trigger photo take
 document.getElementById("capture").addEventListener("click", function() {
     if (isVideoReady) {
-        context.drawImage(video, 0, 0, 640, 480);
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
         var downloadLink = document.getElementById('downloadLink');
         var image = canvas.toDataURL("image/png");
         downloadLink.setAttribute('href', image);
