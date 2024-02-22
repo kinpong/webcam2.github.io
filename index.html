@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Camera Web App</h1>
+
+<button id="capture">Capture Photo</button>
+<video id="video" width="640" height="480" autoplay style="position: absolute; top: -9999px;"></video>
+<canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+<a id="downloadLink" download="capturedImage.png">Download Image</a>
+
+<script>
+// Grab elements, create settings, etc.
+var video = document.getElementById('video');
+var isVideoReady = false;
+
+// Get access to the camera!
+if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    // Not adding `{ audio: true }` since we only want video now
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+        video.srcObject = stream;
+        video.play();
+    });
+}
+
+video.onloadedmetadata = function() {
+    isVideoReady = true;
+};
+
+// Elements for taking the snapshot
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
+
+// Trigger photo take
+document.getElementById("capture").addEventListener("click", function() {
+    if (isVideoReady) {
+        context.drawImage(video, 0, 0, 640, 480);
+        var downloadLink = document.getElementById('downloadLink');
+        var image = canvas.toDataURL("image/png");
+        downloadLink.setAttribute('href', image);
+    } else {
+        alert('The video is not ready yet.');
+    }
+});
+</script>
+
+</body>
+</html>
