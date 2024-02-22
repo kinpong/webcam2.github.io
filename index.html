@@ -18,8 +18,8 @@ if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ 
         video: { 
             facingMode: "environment",
-            width: { ideal: 6048 },
-            height: { ideal: 8064 }
+            width: { ideal: 3024 },
+            height: { ideal: 4032 }
         } 
     }).then(function(stream) {
         video.srcObject = stream;
